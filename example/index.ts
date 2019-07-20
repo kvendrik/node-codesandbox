@@ -1,4 +1,4 @@
-import {Uploader, getApiTokenFromUser} from '../src';
+import {Uploader, getApiTokenFromUser, logSandboxUrl} from '../src';
 
 (async () => {
   const token = await getApiTokenFromUser();
@@ -15,5 +15,5 @@ const rootElement = document.getElementById("root");
 render(<App />, rootElement);`,
     },
   });
-  console.log(`Your sandbox URL: ${sandboxUrl}`);
+  logSandboxUrl(sandboxUrl);
 })();

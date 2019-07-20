@@ -3,6 +3,7 @@ import {getToken, setToken, configPath} from './config';
 import inquirer from 'inquirer';
 import opn from 'opn';
 import ora from 'ora';
+import * as log from '../log';
 
 export async function getApiTokenFromUser() {
   const api = new CodeSandboxApi();
@@ -12,7 +13,7 @@ export async function getApiTokenFromUser() {
     return token;
   }
 
-  console.log(
+  log.instruction(
     'We will open CodeSandbox and show you an authorization token.',
     '\nPlease paste this token into the CLI to log in.',
   );
@@ -36,7 +37,7 @@ export async function getApiTokenFromUser() {
       },
     } = await api.request('GET', `/auth/verify/${authToken}`);
     setToken(token);
-    console.log(
+    log.success(
       `\nSuccess! Logged in as ${user.username}.`,
       `\nSaved to ${configPath}`,
     );
@@ -45,7 +46,7 @@ export async function getApiTokenFromUser() {
   } catch (error) {
     spinner.stop();
     const message = error.response.data.errors.detail;
-    console.log(message.join('\n'));
+    log.error(message.join('\n'));
     process.exit(1);
   }
 }

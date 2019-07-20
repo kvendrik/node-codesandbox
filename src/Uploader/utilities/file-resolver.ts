@@ -1,19 +1,50 @@
 import {INormalizedModules, IModule} from 'codesandbox-import-util-types';
+import {isText, isTooBig} from 'codesandbox-import-utils/lib/is-text';
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
+import CodeSandboxApi from '../../CodeSandboxApi';
+import * as log from '../../log';
 
 interface Files {
   [path: string]: string;
 }
 
-export function resolveFiles(basePath: string, paths: string[]) {
-  return paths.reduce(
-    (files, path) => ({
-      ...files,
-      [path]: readFileSync(resolve(basePath, path), 'utf-8'),
-    }),
-    {},
-  );
+export async function resolveModules(
+  basePath: string,
+  paths: string[],
+  api: CodeSandboxApi,
+): Promise<INormalizedModules> {
+  const modules = {};
+
+  for await (const path of paths) {
+    const absolutePath = resolve(basePath, path);
+    let content = readFileSync(absolutePath);
+    const isBinary = !(await isText(absolutePath, content));
+
+    if (!isBinary) {
+      log.info(`Adding ${path}.`);
+      modules[path] = {
+        content: content.toString(),
+        isBinary: false,
+      };
+      continue;
+    }
+
+    if (isTooBig(content)) {
+      throw new Error(`${absolutePath} is too big to upload.`);
+    }
+
+    log.info(`Uploading binary file ${path}.`);
+    const uploadUrl = await api.uploadBinaryFile(path, content);
+
+    modules[path] = {
+      path,
+      content: uploadUrl,
+      isBinary: true,
+    };
+  }
+
+  return modules;
 }
 
 export function constructModulesFromFiles(files: Files): INormalizedModules {
@@ -22,8 +53,9 @@ export function constructModulesFromFiles(files: Files): INormalizedModules {
       ...currentModules,
       [path]: {
         content: files[path],
-      } as IModule,
+        isBinary: false,
+      },
     }),
-    ([] as unknown) as INormalizedModules,
+    {},
   );
 }
