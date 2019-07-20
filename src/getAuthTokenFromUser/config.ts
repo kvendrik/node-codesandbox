@@ -13,11 +13,19 @@ export async function getToken() {
   if (!existsSync(configPath)) {
     return null;
   }
-  const config = readJSONSync(configPath, 'utf-8');
-  let token = config.token;
-  if (Date.now() - config.lastUpdate > TTL) {
-    token = refreshToken(config.token);
+
+  const {lastUpdate, token} = readJSONSync(configPath, 'utf-8');
+  const tokenNeedsValidation = Date.now() - lastUpdate > TTL;
+
+  if (tokenNeedsValidation) {
+    if (await validateToken(token)) {
+      setToken(token);
+    } else {
+      setToken(null);
+      return null;
+    }
   }
+
   return token;
 }
 
@@ -31,10 +39,8 @@ export function setToken(token: string) {
   );
 }
 
-async function refreshToken(currentToken: string) {
+async function validateToken(currentToken: string) {
   api.setToken(currentToken);
-  const newConfig = await api.request('GET', '/users/current');
-  const newToken = newConfig.data.token;
-  setToken(newToken);
-  return newToken;
+  const {status} = await api.request('GET', '/users/current');
+  return status === 200;
 }

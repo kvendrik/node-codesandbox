@@ -4,8 +4,8 @@ import {Uploader, getApiTokenFromUser} from '../src';
   const token = await getApiTokenFromUser();
   const uploader = new Uploader(token);
   const {sandboxUrl} = await uploader.upload(`${__dirname}/project`, {
-    include: ['package.json', 'styles.css', 'App.*', 'DS_Store'],
-    exclude: ['DS_Store'],
+    include: ['package.json', 'App'],
+    exclude: ['**/DS_Store'],
     files: {
       'index.tsx': `import * as React from "react";
 import { render } from "react-dom";

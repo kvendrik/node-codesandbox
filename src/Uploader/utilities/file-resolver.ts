@@ -1,4 +1,4 @@
-import {INormalizedModules} from 'codesandbox-import-util-types';
+import {INormalizedModules, IModule} from 'codesandbox-import-util-types';
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
@@ -22,8 +22,7 @@ export function constructModulesFromFiles(files: Files): INormalizedModules {
       ...currentModules,
       [path]: {
         content: files[path],
-        isBinary: false,
-      },
+      } as IModule,
     }),
     ([] as unknown) as INormalizedModules,
   );

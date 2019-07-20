@@ -1,3 +1,4 @@
+import {decamelizeKeys} from 'humps';
 import CodesandboxApi from '../CodeSandboxApi';
 import {resolveIncludes, filterExcludes} from './utilities/paths';
 import {
@@ -30,15 +31,27 @@ class Uploader {
     path: string,
     {include, exclude, files: additionalFiles}: Config = {},
   ) {
-    const includePaths = resolveIncludes(path, include);
+    const includePaths = resolveIncludes(path, include || ['**/*']);
     const finalPaths = filterExcludes(includePaths, exclude);
     const modules = constructModulesFromFiles({
       ...resolveFiles(path, finalPaths),
       ...additionalFiles,
     });
     const sandbox = await createSandbox(modules);
+    console.log(
+      JSON.stringify(
+        {
+          sandbox: {
+            ...sandbox,
+            from_cli: true,
+          },
+        },
+        null,
+        2,
+      ),
+    );
     const response = await this.api.request('POST', '/sandboxes', {
-      sandbox,
+      sandbox: decamelizeKeys(sandbox),
     });
     const sandboxId = response.data.data.alias;
     return {

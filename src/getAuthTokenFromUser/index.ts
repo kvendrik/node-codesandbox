@@ -7,6 +7,7 @@ import ora from 'ora';
 export async function getApiTokenFromUser() {
   const api = new CodeSandboxApi();
   const token = await getToken();
+
   if (token) {
     return token;
   }
