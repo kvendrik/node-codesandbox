@@ -35,7 +35,7 @@ class Uploader {
     const finalPaths = filterExcludes(includePaths, exclude);
     const modules = {
       ...(await resolveModules(path, finalPaths, this.api)),
-      ...constructModulesFromFiles(additionalFiles),
+      ...constructModulesFromFiles(additionalFiles || {}),
     };
     const sandbox = await createSandbox(modules);
     const response = await this.api.request('POST', '/sandboxes', {

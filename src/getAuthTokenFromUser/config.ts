@@ -14,7 +14,7 @@ export async function getToken() {
     return null;
   }
 
-  const {lastUpdate, token} = readJSONSync(configPath, 'utf-8');
+  const {lastUpdate, token} = readJSONSync(configPath);
   const tokenNeedsValidation = Date.now() - lastUpdate > TTL;
 
   if (tokenNeedsValidation) {
@@ -29,7 +29,7 @@ export async function getToken() {
   return token;
 }
 
-export function setToken(token: string) {
+export function setToken(token: string | null) {
   return writeFileSync(
     configPath,
     JSON.stringify({

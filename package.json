@@ -1,14 +1,23 @@
 {
   "name": "node-codesandbox",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "description": "Upload code to codesandbox",
-  "main": "index.js",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
-    "dev": "ts-node ./example"
+    "dev": "ts-node ./example",
+    "lint": "tsc --noEmit",
+    "build": "tsc --project tsconfig.json"
   },
   "author": "Koen Vendrik <k.vendrik@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/fs-extra": "^8.0.0",
+    "@types/glob": "^7.1.1",
+    "@types/humps": "^1.1.2",
+    "@types/inquirer": "^6.0.3",
+    "@types/minimatch": "^3.0.3",
+    "@types/ms": "^0.7.30",
     "@types/node": "^12.6.8",
     "prettier": "^1.18.2",
     "ts-node": "^8.3.0",
@@ -24,7 +33,7 @@
     "humps": "^2.0.1",
     "inquirer": "^6.5.0",
     "minimatch": "^3.0.4",
-    "opn": "^6.0.0",
+    "open": "^6.4.0",
     "ora": "^3.4.0",
     "shortid": "^2.2.14"
   },

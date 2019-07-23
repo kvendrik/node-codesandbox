@@ -1,7 +1,7 @@
 import CodeSandboxApi from '../CodeSandboxApi';
 import {getToken, setToken, configPath} from './config';
 import inquirer from 'inquirer';
-import opn from 'opn';
+import open from 'open';
 import ora from 'ora';
 import * as log from '../log';
 
@@ -17,7 +17,7 @@ export async function getApiTokenFromUser() {
     'We will open CodeSandbox and show you an authorization token.',
     '\nPlease paste this token into the CLI to log in.',
   );
-  opn('https://codesandbox.io/cli/login', {
+  open('https://codesandbox.io/cli/login', {
     wait: false,
   });
 

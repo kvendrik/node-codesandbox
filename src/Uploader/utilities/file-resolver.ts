@@ -14,7 +14,7 @@ export async function resolveModules(
   paths: string[],
   api: CodeSandboxApi,
 ): Promise<INormalizedModules> {
-  const modules = {};
+  const modules = {} as INormalizedModules;
 
   for await (const path of paths) {
     const absolutePath = resolve(basePath, path);
@@ -38,7 +38,6 @@ export async function resolveModules(
     const uploadUrl = await api.uploadBinaryFile(path, content);
 
     modules[path] = {
-      path,
       content: uploadUrl,
       isBinary: true,
     };

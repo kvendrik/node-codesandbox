@@ -29,7 +29,7 @@ export function resolveIncludes(basePath: string, includes: Config['include']) {
 }
 
 export function filterExcludes(paths: string[], excludes: Config['exclude']) {
-  const finalExcludes = [...excludes, 'node_modules', '.git'];
+  const finalExcludes = [...(excludes || []), 'node_modules', '.git'];
   return paths.filter(
     (path) =>
       !finalExcludes.some((excludePath) => minimatch(path, excludePath)),
