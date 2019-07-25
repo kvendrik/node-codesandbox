@@ -13,6 +13,9 @@ This package can be seen as a proof of concept because if this proves to be some
 
 ## Usage
 
+1. `yarn add node-codesandbox`
+2. Check out the example:
+
 ```ts
 import {Uploader, getApiTokenFromUser, logSandboxUrl} from 'node-codesandbox';
 
